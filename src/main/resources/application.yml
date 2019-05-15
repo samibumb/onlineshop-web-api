@@ -1,0 +1,9 @@
+server.port : 8090
+
+spring:
+
+  datasource:
+    url : jdbc:mysql://localhost:3306/online-shop
+    username : root
+    password : Material1!
+  jpa.hibernate.ddl-auto : create
