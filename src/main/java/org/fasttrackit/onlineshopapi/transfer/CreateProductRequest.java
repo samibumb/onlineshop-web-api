@@ -1,17 +1,9 @@
-package org.fasttrackit.onlineshopapi.domain;
+package org.fasttrackit.onlineshopapi.transfer;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@Entity
-public class Product {
-
-    @Id
-    @GeneratedValue
-    private long id;
+public class CreateProductRequest {
 
     @NotNull
     private String name;
@@ -24,15 +16,6 @@ public class Product {
     private double price;
 
     private String image;
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -64,5 +47,15 @@ public class Product {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateProductRequest{" +
+                "name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                '}';
     }
 }
