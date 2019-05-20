@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -39,6 +41,14 @@ public class ProductServiceIntegrationTests {
 		assertThat(createdProduct.getName(),is(request.getName()));
 		assertThat(createdProduct.getPrice(),is(request.getPrice()));
 		assertThat(createdProduct.getQuantity(),is(request.getQuantity()));
+	}
+
+	@Test(expected = ConstraintViolationException.class)
+	public void testCreateProduct_whenMissingMandatoryProperties_thenThrowException(){
+		CreateProductRequest request = new CreateProductRequest();
+
+		productService.createProduct(request);
+
 	}
 
 }
