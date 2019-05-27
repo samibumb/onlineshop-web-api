@@ -2,11 +2,13 @@ package org.fasttrackit.onlineshopapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.onlineshopapi.domain.Product;
+import org.fasttrackit.onlineshopapi.dto.UpdateProductRequest;
 import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.repository.ProductRepository;
-import org.fasttrackit.onlineshopapi.transfer.CreateProductRequest;
+import org.fasttrackit.onlineshopapi.dto.CreateProductRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,23 @@ public class ProductService {
 
         return productRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Product "+id+" does not exist"));
 
+
+    }
+
+    public Product updateProduct(long id, UpdateProductRequest updateProductRequest) throws ResourceNotFoundException {
+        LOGGER.info("Updating product {} with {}",id,updateProductRequest);
+
+        Product product = getProduct(id);
+
+        BeanUtils.copyProperties(updateProductRequest,product);
+
+        return productRepository.save(product);
+    }
+
+    public void deleteProduct(long id){
+    LOGGER.info("Deleting product {}",id);
+        productRepository.deleteById(id);
+    LOGGER.info("Deleted product {}",id);
 
     }
 }
