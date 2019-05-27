@@ -2,6 +2,7 @@ package org.fasttrackit.onlineshopapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.onlineshopapi.domain.Product;
+import org.fasttrackit.onlineshopapi.dto.GetProductsRequest;
 import org.fasttrackit.onlineshopapi.dto.UpdateProductRequest;
 import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.repository.ProductRepository;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -64,4 +67,16 @@ public class ProductService {
     LOGGER.info("Deleted product {}",id);
 
     }
+
+    public Page<Product> getProducts(GetProductsRequest getProductsRequest, Pageable pageable){
+
+        if (getProductsRequest.getName()!=null && getProductsRequest.getMinQuantity()!=null) {
+            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(getProductsRequest.getName(),getProductsRequest.getMinQuantity(), pageable);
+        }else if (getProductsRequest.getName()!=null){
+            return productRepository.findByNameContaining(getProductsRequest.getName(),pageable);
+        }
+
+
+        return productRepository.findAll(pageable);
+        }
 }

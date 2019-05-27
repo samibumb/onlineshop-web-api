@@ -1,9 +1,10 @@
 package org.fasttrackit.onlineshopapi;
 
 import org.fasttrackit.onlineshopapi.domain.Product;
+import org.fasttrackit.onlineshopapi.dto.UpdateProductRequest;
 import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.service.ProductService;
-import org.fasttrackit.onlineshopapi.transfer.CreateProductRequest;
+import org.fasttrackit.onlineshopapi.dto.CreateProductRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import javax.validation.ConstraintViolationException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(SpringRunner.class)
@@ -80,5 +82,44 @@ public class ProductServiceIntegrationTests {
 		}
 
 	}
+
+	@Test
+	public void testUpdateProduct() throws ResourceNotFoundException {
+
+	   Product product = createProduct();
+
+        UpdateProductRequest updateProductRequest = new UpdateProductRequest();
+        updateProductRequest.setName(product.getName()+" Updated");
+	    updateProductRequest.setPrice(product.getPrice()+10);
+	    updateProductRequest.setQuantity(product.getQuantity()+10);
+
+        Product updatedProduct = productService.updateProduct(product.getId(),updateProductRequest);
+
+        assertThat(updatedProduct.getId(),notNullValue());
+        assertThat(updatedProduct.getId(),is(product.getId()));
+
+        assertThat(updatedProduct.getQuantity(),not(is(product.getQuantity())));
+        assertThat(updatedProduct.getQuantity(),is(updateProductRequest.getQuantity()));
+
+        assertThat(updatedProduct.getPrice(),not(is(product.getPrice())));
+        assertThat(updatedProduct.getPrice(),is(updateProductRequest.getPrice()));
+
+        assertThat(updatedProduct.getName(),not(is(product.getName())));
+        assertThat(updatedProduct.getName(),is(updateProductRequest.getName()));
+
+
+        System.out.println(product);
+        System.out.println("Updated product :\n"+updateProductRequest);
+
+	}
+
+	@Test
+    public void deleteProductTest(){
+
+	    Product product = createProduct();
+
+	    productService.deleteProduct(product.getId());
+
+    }
 
 }

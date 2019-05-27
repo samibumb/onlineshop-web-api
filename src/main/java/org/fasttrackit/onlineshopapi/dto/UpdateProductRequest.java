@@ -1,9 +1,9 @@
-package org.fasttrackit.onlineshopapi.transfer;
+package org.fasttrackit.onlineshopapi.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class CreateProductRequest {
+public class UpdateProductRequest {
 
     @NotNull
     private String name;
@@ -50,9 +50,9 @@ public class CreateProductRequest {
     }
 
     @Override
-    public String toString() {
-        return "CreateProductRequest{" +
-                "name='" + name + '\'' +
+    public String
+    toString() {
+        return  "name='" + name + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", image='" + image + '\'' +
