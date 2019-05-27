@@ -1,6 +1,7 @@
 package org.fasttrackit.onlineshopapi;
 
 import org.fasttrackit.onlineshopapi.domain.Product;
+import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.service.ProductService;
 import org.fasttrackit.onlineshopapi.transfer.CreateProductRequest;
 import org.junit.Test;
@@ -27,6 +28,10 @@ public class ProductServiceIntegrationTests {
 	@Test
 	public void testCreateProduct_whenValidRequest_thenReturnCreatedProduct() {
 
+		createProduct();
+	}
+
+	private Product createProduct() {
 		CreateProductRequest request = new CreateProductRequest();
 		request.setName("Nivea");
 		request.setPrice(99.9);
@@ -41,6 +46,8 @@ public class ProductServiceIntegrationTests {
 		assertThat(createdProduct.getName(),is(request.getName()));
 		assertThat(createdProduct.getPrice(),is(request.getPrice()));
 		assertThat(createdProduct.getQuantity(),is(request.getQuantity()));
+
+	return createdProduct;
 	}
 
 	@Test(expected = ConstraintViolationException.class)
@@ -48,6 +55,29 @@ public class ProductServiceIntegrationTests {
 		CreateProductRequest request = new CreateProductRequest();
 
 		productService.createProduct(request);
+
+	}
+
+	@Test
+	public void findProductById_whenExist_thenReturnProduct() throws ResourceNotFoundException {
+
+		Product createdProduct = createProduct();
+		Product product = productService.getProduct(createdProduct.getId());
+
+		assertThat(product,notNullValue());
+		assertThat(product.getId(),is(createdProduct.getId()));
+
+		System.out.println(createdProduct);
+
+	}
+	@Test(expected = ResourceNotFoundException.class)
+	public void TestProduct_whenNoExistingId_thenThrowReseourceNotFoundException(){
+
+		try {
+			productService.getProduct(9999L);
+		} catch (ResourceNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 

@@ -1,6 +1,7 @@
 package org.fasttrackit.onlineshopapi.service;
 
 import org.fasttrackit.onlineshopapi.domain.Product;
+import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.repository.ProductRepository;
 import org.fasttrackit.onlineshopapi.transfer.CreateProductRequest;
 import org.slf4j.Logger;
@@ -31,5 +32,12 @@ public class ProductService {
         product.setImage(createProductRequest.getImage());
 
         return productRepository.save(product);
+    }
+
+    public Product getProduct(long id) throws ResourceNotFoundException {
+
+        return productRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Product "+id+" does not exist"));
+
+
     }
 }
