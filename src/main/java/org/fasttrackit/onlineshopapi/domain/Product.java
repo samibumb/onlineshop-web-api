@@ -16,10 +16,10 @@ public class Product {
 
     @NotNull
     @Min(0)
-    private int quantity;
+    private Integer quantity;
 
     @NotNull
-    private double price;
+    private Double price;
 
     private String image;
 
