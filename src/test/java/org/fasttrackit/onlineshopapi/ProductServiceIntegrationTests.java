@@ -5,6 +5,7 @@ import org.fasttrackit.onlineshopapi.dto.UpdateProductRequest;
 import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.service.ProductService;
 import org.fasttrackit.onlineshopapi.dto.CreateProductRequest;
+import org.fasttrackit.onlineshopapi.steps.ProductSteps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,11 @@ public class ProductServiceIntegrationTests {
 	@Autowired
 	private ProductService productService;
 
+	private ProductSteps productSteps;
 	@Test
 	public void testCreateProduct_whenValidRequest_thenReturnCreatedProduct() {
 
-		createProduct();
+		productSteps.createProduct();
 	}
 
 	private Product createProduct() {
@@ -49,7 +51,7 @@ public class ProductServiceIntegrationTests {
 		assertThat(createdProduct.getPrice(),is(request.getPrice()));
 		assertThat(createdProduct.getQuantity(),is(request.getQuantity()));
 
-	return createdProduct;
+		return createdProduct;
 	}
 
 	@Test(expected = ConstraintViolationException.class)

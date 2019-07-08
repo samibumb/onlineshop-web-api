@@ -3,6 +3,8 @@ package org.fasttrackit.onlineshopapi.domain;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Product")
@@ -11,6 +13,10 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @ManyToMany(mappedBy = "products")
+    private Set<Cart> carts = new HashSet<>();
+
 
     @NotNull
     private String name;
@@ -49,6 +55,14 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -63,6 +77,14 @@ public class Product {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Set<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<Cart> carts) {
+        this.carts = carts;
     }
 
     @Override

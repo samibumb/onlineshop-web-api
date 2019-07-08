@@ -3,6 +3,7 @@ package org.fasttrackit.onlineshopapi;
 import org.fasttrackit.onlineshopapi.domain.Customer;
 import org.fasttrackit.onlineshopapi.dto.CreateCustomerRequest;
 import org.fasttrackit.onlineshopapi.service.CustomerService;
+import org.fasttrackit.onlineshopapi.steps.CustomerSteps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +22,13 @@ public class CustomerServiceIntegrationTests {
 	@Autowired
 	private CustomerService customerService;
 
+	@Autowired
+	private CustomerSteps customerSteps;
+
 	@Test
 	public void testCreateCustomer_whenValidRequest_thenReturnCustomer(){
 
-		CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
-
-		createCustomerRequest.setFirstName("Dorel");
-		createCustomerRequest.setLastName("Tarnacop");
-		createCustomerRequest.setAge(100);
-		createCustomerRequest.seteMail("dorel.tarnacop");
-		createCustomerRequest.setPhoneNumber(746573829L);
-
-		Customer customer =customerService.createCustomer(createCustomerRequest);
-
-		assertThat(customer,notNullValue());
-		assertThat(customer.getId(),greaterThan(0L));
-		assertThat(customer.getFirstName(),is(createCustomerRequest.getFirstName()));
-		assertThat(customer.getLastName(),is(createCustomerRequest.getLastName()));
-		assertThat(customer.getAge(),is(createCustomerRequest.getAge()));
-		assertThat(customer.geteMail(),is(createCustomerRequest.geteMail()));
-		assertThat(customer.getPhoneNumber(),is(createCustomerRequest.getPhoneNumber()));
+		customerSteps.createCustomer();
 
 	}
 }
