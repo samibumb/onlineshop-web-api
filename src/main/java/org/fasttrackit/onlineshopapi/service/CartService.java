@@ -3,6 +3,9 @@ package org.fasttrackit.onlineshopapi.service;
 import org.fasttrackit.onlineshopapi.domain.Cart;
 import org.fasttrackit.onlineshopapi.domain.Product;
 import org.fasttrackit.onlineshopapi.dto.cart.AddProductToCartRequest;
+import org.fasttrackit.onlineshopapi.dto.cart.CartResponse;
+import org.fasttrackit.onlineshopapi.dto.customer.CustomerDto;
+import org.fasttrackit.onlineshopapi.dto.product.ProductResponse;
 import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.repository.CartRepository;
 import org.slf4j.Logger;
@@ -46,8 +49,26 @@ public class CartService {
     }
 
     @Transactional
-    public Cart getCart(Long id) throws ResourceNotFoundException {
-        return cartRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Cart "+id+" not found."));
+    public CartResponse getCart(Long id) throws ResourceNotFoundException {
+        Cart cart = cartRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Cart "+id+" not found."));
+
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(cart.getCustomer().getId());
+        customerDto.setFirstName(cart.getCustomer().getFirstName());
+        customerDto.setLastName(cart.getCustomer().getLastName());
+
+        CartResponse cartResponse = new CartResponse();
+        cartResponse.setId(cart.getId());
+        cartResponse.setCustomerDto(customerDto);
+
+        cart.getProducts().forEach(product -> {
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setId(product.getId());
+            productResponse.setName(product.getName());
+
+            cartResponse.getProductResponses().add(productResponse);
+        });
+        return cartResponse;
     }
 
 
