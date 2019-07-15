@@ -1,9 +1,13 @@
 package org.fasttrackit.onlineshopapi.dto.cart;
 
+import javax.validation.constraints.NotNull;
+
 public class AddProductToCartRequest {
 
+    @NotNull
     private Long customerId;
 
+    @NotNull
     private Long productId;
 
     public Long getCustomerId() {
