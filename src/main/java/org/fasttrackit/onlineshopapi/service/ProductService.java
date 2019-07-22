@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.onlineshopapi.domain.Product;
 import org.fasttrackit.onlineshopapi.dto.GetProductsRequest;
 import org.fasttrackit.onlineshopapi.dto.UpdateProductRequest;
+import org.fasttrackit.onlineshopapi.dto.product.ProductResponse;
 import org.fasttrackit.onlineshopapi.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshopapi.repository.ProductRepository;
 import org.fasttrackit.onlineshopapi.dto.CreateProductRequest;
@@ -12,8 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -68,15 +73,29 @@ public class ProductService {
 
     }
 
-    public Page<Product> getProducts(GetProductsRequest getProductsRequest, Pageable pageable){
+    public PageImpl getProducts(GetProductsRequest getProductsRequest, Pageable pageable){
+
+        Page<Product> products;
+        List<ProductResponse> responseList = new ArrayList<>();
 
         if (getProductsRequest.getName()!=null && getProductsRequest.getMinQuantity()!=null) {
-            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(getProductsRequest.getName(),getProductsRequest.getMinQuantity(), pageable);
+            products = productRepository.findByNameContainingAndQuantityGreaterThanEqual(getProductsRequest.getName(),getProductsRequest.getMinQuantity(), pageable);
         }else if (getProductsRequest.getName()!=null){
-            return productRepository.findByNameContaining(getProductsRequest.getName(),pageable);
+            products = productRepository.findByNameContaining(getProductsRequest.getName(),pageable);
+        }else {
+            products = productRepository.findAll(pageable);
         }
 
+        products.getContent().forEach(product -> {
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setId(product.getId());
+            productResponse.setName(product.getName());
+            productResponse.setPrice(product.getPrice());
+            productResponse.setQuantity(product.getQuantity());
+            productResponse.setImagePath(product.getImage());
 
-        return productRepository.findAll(pageable);
+            responseList.add(productResponse);
+        });
+        return new PageImpl<>(responseList,pageable,products.getTotalElements());
         }
 }
